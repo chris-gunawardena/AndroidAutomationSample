@@ -1,6 +1,8 @@
 package com.ibm.loginregistration;
 
 
+import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -17,6 +19,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.Random;
+
+import de.nenick.espressomacchiato.tools.EspAppDataTool;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -181,6 +185,18 @@ public class E2ERegisterLoginTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+
+
+    public static void resetApp() {
+        Context context = InstrumentationRegistry.getTargetContext();
+
+        // clearing app data
+        EspAppDataTool.clearApplicationData();
+        EspAppDataTool.clearCache();
+        EspAppDataTool.clearStorage();
+        EspAppDataTool.clearDatabase();
     }
 
 }

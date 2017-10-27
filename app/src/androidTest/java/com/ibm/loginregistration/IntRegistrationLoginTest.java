@@ -2,6 +2,7 @@ package com.ibm.loginregistration;
 
 
 import android.content.Context;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,6 +26,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Random;
+
+import de.nenick.espressomacchiato.tools.EspAppDataTool;
+
 import static android.support.test.InstrumentationRegistry.getInstrumentation;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
@@ -55,125 +59,25 @@ public class IntRegistrationLoginTest {
 
     @Before
     public void setup() {
-        wireMockRule.stubFor(any(urlEqualTo("/v2/configuration"))
+        resetApp();
+
+        wireMockRule.stubFor(any(urlEqualTo("/wp-content/uploads/ibmtestauth/"))
                 .atPriority(5).willReturn(aResponse()
-                        .withBody(asset("testdata/configuration.json"))));
+                        .withBody(asset("testdata/login_response.json"))));
         mActivityTestRule.launchActivity(null);
     }
 
 
     @Test
-    public void e2ERegisterLoginTest() {
-        ViewInteraction appCompatTextView = onView(
-                allOf(withId(R.id.tv_register), withText("Not Registered ? Register Now !"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_frame),
-                                        0),
-                                4),
-                        isDisplayed()));
-        appCompatTextView.perform(click());
+    public void intLoginTest() {
 
-        ViewInteraction appCompatEditText = onView(
-                allOf(withId(R.id.et_name),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
-        appCompatEditText.perform(replaceText("Chris"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText2 = onView(
-                allOf(withId(R.id.et_email),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
-                        isDisplayed()));
-        Random r = new Random();
-        int randomNumber = r.nextInt(99999) + 1;
-        appCompatEditText2.perform(replaceText("chris" + randomNumber + "@test.com"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText3 = onView(
-                allOf(withId(R.id.et_password),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        3),
-                                0),
-                        isDisplayed()));
-        appCompatEditText3.perform(replaceText("zxzxzx"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText4 = onView(
-                allOf(withId(R.id.et_password), withText("zxzxzx"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        3),
-                                0),
-                        isDisplayed()));
-        appCompatEditText4.perform(pressImeActionButton());
-
-        ViewInteraction appCompatButton = onView(
-                allOf(withId(R.id.btn_register), withText("Register"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_frame),
-                                        0),
-                                4),
-                        isDisplayed()));
-        appCompatButton.perform(click());
+        onView(withId(R.id.et_email)).perform(replaceText("test@test.com"));
+        onView(withId(R.id.et_password)).perform(replaceText("sfljgsdfkjg"));
+        onView(withId(R.id.btn_login)).perform(click());
 
         sleep(3000);
 
-        ViewInteraction appCompatTextView2 = onView(
-                allOf(withId(R.id.tv_login), withText("Already Registered ? Login Now !"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_frame),
-                                        0),
-                                5),
-                        isDisplayed()));
-        appCompatTextView2.perform(click());
-
-        ViewInteraction appCompatEditText5 = onView(
-                allOf(withId(R.id.et_email),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        1),
-                                0),
-                        isDisplayed()));
-        appCompatEditText5.perform(replaceText("chris" + randomNumber + "@test.com"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText6 = onView(
-                allOf(withId(R.id.et_password),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
-                        isDisplayed()));
-        appCompatEditText6.perform(replaceText("zxzxzx"), closeSoftKeyboard());
-
-        ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.btn_login), isDisplayed()));
-        appCompatEditText7.perform(click());
-
-        sleep(3000);
-
-        ViewInteraction textView = onView(
-                allOf(withId(R.id.tv_name), withText("Welcome : Chris"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withId(R.id.fragment_frame),
-                                        0),
-                                0),
-                        isDisplayed()));
-        textView.check(matches(withText("Welcome : Chris")));
-
+        onView(withId(R.id.tv_name)).check(matches(withText("Welcome : Mock User")));
     }
 
     private static Matcher<View> childAtPosition(
@@ -234,6 +138,17 @@ public class IntRegistrationLoginTest {
             builder.append(buffer, 0, length);
         }
         return builder.toString();
+    }
+
+
+    public static void resetApp() {
+        Context context = InstrumentationRegistry.getTargetContext();
+
+        // clearing app data
+        EspAppDataTool.clearApplicationData();
+        EspAppDataTool.clearCache();
+        EspAppDataTool.clearStorage();
+        EspAppDataTool.clearDatabase();
     }
 
 }

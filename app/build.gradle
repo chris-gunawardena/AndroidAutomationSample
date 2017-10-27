@@ -35,6 +35,12 @@ android {
     }
 
     sourceSets {
+        androidTest {
+            assets {
+                assets.srcDirs = ['src/androidTest/assets']
+            }
+
+        }
         prodFlavor {
             java {
                 srcDirs = ['src/prodFlavor/java']
@@ -59,6 +65,12 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestCompile "com.github.tomakehurst:wiremock-standalone:2.6.0"
-
+    androidTestCompile "com.github.tomakehurst:wiremock-standalone:2.10.1"
+    androidTestCompile ('de.nenick:espresso-macchiato:0.5.0') {
+        exclude module: 'support-v4'
+        exclude module: 'appcompact-v7'
+        exclude module: 'design'
+        exclude module: 'recyclerview-v7'
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }
