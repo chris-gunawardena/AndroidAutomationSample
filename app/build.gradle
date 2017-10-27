@@ -1,27 +1,36 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.ibm.loginregistration"
-        minSdkVersion 16
-        targetSdkVersion 23
+        minSdkVersion 21
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
     }
+
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "default"
     productFlavors {
         prodFlavor {
-            flavorDimensions "default"
+            dimension "default"
         }
         mockFlavor {
+            dimension "default"
         }
     }
 
@@ -42,18 +51,14 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:appcompat-v7:27.0.0'
+    compile 'com.android.support:design:27.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.android.support:multidex:1.0.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     }
-    androidTestCompile ("com.github.tomakehurst:wiremock-standalone:2.10.1") {
-        exclude group: 'org.apache.httpcomponents'
-        exclude group: 'asm', module: 'asm'
-        exclude group: 'org.json', module: 'json'
-    }
+    androidTestCompile "com.github.tomakehurst:wiremock-standalone:2.6.0"
 
 }
