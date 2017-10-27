@@ -16,6 +16,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.Random;
+
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
@@ -66,7 +68,9 @@ public class E2ERegisterLoginTest {
                                         2),
                                 0),
                         isDisplayed()));
-        appCompatEditText2.perform(replaceText("chris@test.com"), closeSoftKeyboard());
+        Random r = new Random();
+        int randomNumber = r.nextInt(99999) + 1;
+        appCompatEditText2.perform(replaceText("chris" + randomNumber + "@test.com"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText3 = onView(
                 allOf(withId(R.id.et_password),
@@ -98,6 +102,8 @@ public class E2ERegisterLoginTest {
                         isDisplayed()));
         appCompatButton.perform(click());
 
+        sleep(3000);
+
         ViewInteraction appCompatTextView2 = onView(
                 allOf(withId(R.id.tv_login), withText("Already Registered ? Login Now !"),
                         childAtPosition(
@@ -116,7 +122,7 @@ public class E2ERegisterLoginTest {
                                         1),
                                 0),
                         isDisplayed()));
-        appCompatEditText5.perform(replaceText("chris@test.com"), closeSoftKeyboard());
+        appCompatEditText5.perform(replaceText("chris" + randomNumber + "@test.com"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText6 = onView(
                 allOf(withId(R.id.et_password),
@@ -129,14 +135,10 @@ public class E2ERegisterLoginTest {
         appCompatEditText6.perform(replaceText("zxzxzx"), closeSoftKeyboard());
 
         ViewInteraction appCompatEditText7 = onView(
-                allOf(withId(R.id.et_password), withText("zxzxzx"),
-                        childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        2),
-                                0),
-                        isDisplayed()));
-        appCompatEditText7.perform(pressImeActionButton());
+                allOf(withId(R.id.btn_login), isDisplayed()));
+        appCompatEditText7.perform(click());
+
+        sleep(3000);
 
         ViewInteraction textView = onView(
                 allOf(withId(R.id.tv_name), withText("Welcome : Chris"),
@@ -168,4 +170,17 @@ public class E2ERegisterLoginTest {
             }
         };
     }
+
+    /**
+     * sleeps for x num of milliseconds using thread sleep
+     * @param mils
+     */
+    public static void sleep(int mils) {
+        try {
+            Thread.sleep(mils);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
