@@ -18,6 +18,9 @@ import com.ibm.loginregistration.models.ServerRequest;
 import com.ibm.loginregistration.models.ServerResponse;
 import com.ibm.loginregistration.models.User;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -82,6 +85,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
 
         }
     }
+
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
     private void loginProcess(String email,String password){
 
         Retrofit retrofit = new Retrofit.Builder()
