@@ -18,8 +18,23 @@ android {
         }
     }
     productFlavors {
-        mock {
+        prodFlavor {
             flavorDimensions "default"
+        }
+        mockFlavor {
+        }
+    }
+
+    sourceSets {
+        prodFlavor {
+            java {
+                srcDirs = ['src/prodFlavor/java']
+            }
+        }
+        mockFlavor {
+            java {
+                srcDirs = ['src/mockFlavor/java']
+            }
         }
     }
 }
